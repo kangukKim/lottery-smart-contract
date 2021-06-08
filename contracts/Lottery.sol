@@ -44,13 +44,17 @@ contract Lottery {
 
     function betAndDistribute(bytes1 challenges) public payable returns (bool result) {
         bet(challenges);
-
         distribute();
 
         return true;
     }
+    /**
+     * @dev 베팅 결과값을 확인 하고 팟머니를 분배한다.
+     * 정답 실패 : 팟이나 축척, 정답 맞춤 : 팟머니 획득, 한글자 맞춤 or 정답 확인 불가 : 베팅 금액만 획득
+     */
 
     function distribute() public  {
+        // head 3 ...... 286 287 8 9 10 11 12 tail
         uint256 cur;
         uint256 transferAmount;
 
@@ -121,7 +125,7 @@ contract Lottery {
      * @dev 베팅글자와 정답을 확인한다.
      * @param challenges 베팅 글자
      * @param answer 블락해쉬
-     * @return 정답결과
+     * @return BettingResult 정답결과
      */
     function isMatch(bytes1 challenges, bytes32 answer) public pure returns (BettingResult) {
         //challenges 0xab
@@ -182,7 +186,7 @@ contract Lottery {
      * @dev 베팅을 한다. 유저는 0.005eth를 보내야하고, 베팅을 1 byte 글자를 보낸다.
      * 큐에 저장된 베팅 정보는 이후 distribute 함수에서 해결된다.
      * @param challenges 유저가 베팅하는 글자
-     * @return 함수가 잘 수행되었는지 확인하는 bool 값
+     * @return result 함수가 잘 수행되었는지 확인하는 bool 값
      */
     function bet(bytes1 challenges) public payable returns (bool result) {
         //check the proper ether is sent
